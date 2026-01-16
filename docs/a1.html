@@ -9,10 +9,123 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
+    <h1> Asignment 1: Blink</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+      <img src="IMG_3CC001672C57-1.jpeg" />
+      <p>The first image you will see is my schematic. I started with the pin each one started at then I added a resistor to before each led as shown in my caluclations red had a 220 ohm resistor while green and blue both used 100 ohm resistors. after the resistors i has the leds which then went to ground, each circut was in series.  </p>
     </div>
+      <div class="header">
+    <img src="IMG_2925.jpeg" />
+    <p>
+      Here is the image of my circut. Each LED is connected to its own resistor and shares a common ground.
+    </p>
+  </div>
+
+  <div class="code-snippet">
+    <p>
+      Here is my code snippet for the blinking lED's:
+    </p>
+    <pre><code>
+      // setting the int timer to 0.2 sec
+int timer = 200;
+//this is the setup function 
+void setup() {
+  // this is a for loop that initializes pins 2 through 5 one at a time 
+  for (int thisPin = 2; thisPin < 5; thisPin++) {
+    //this tells the audrino to output power to the pin the four loop is on
+    pinMode(thisPin, OUTPUT);
+  }
+  //these all are just telling the arduno to output power to the asociated pin when I call it later in the code
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+
+}
+// the void loop is is required for the code to work and means the function does not have a return value
+// the loop part means the code will repeat infinitly as long as the ardueno has power
+void loop() {
+  // this loop sets the int vaule from the 2 pin to the 5 pin one at a time
+  for (int thisPin = 2; thisPin < 5; thisPin++) {
+    // send power to the pin that the loop is on
+    digitalWrite(thisPin, HIGH);
+    // wait for the specified timer amount of time
+    delay(timer);
+    // turn the pin off
+    digitalWrite(thisPin, LOW);
+  }
+
+  // loop from the highest pin to the lowest pin one at a time 
+  for (int thisPin = 5; thisPin >= 2; thisPin--) {
+    // turn the pin on:
+    digitalWrite(thisPin, HIGH);
+    //wait for the timer time
+    delay(timer);
+    // turn the pin off:
+    digitalWrite(thisPin, LOW);
+  }
+
+  // loop from the lowest pin to the highest one at a time
+  for (int thisPin = 2; thisPin < 5; thisPin++) {
+    // turn the pin on:
+    digitalWrite(thisPin, HIGH);
+    // wait
+    delay(timer);
+    // turn the pin off:
+    digitalWrite(thisPin, LOW);
+    // wait
+    delay(timer);
+    //turn pin on
+    digitalWrite(thisPin, HIGH);
+    // wait
+    delay(timer);
+    // turn the pin off:
+    digitalWrite(thisPin, LOW);
+  }
+//turn on pin 5
+  digitalWrite(5, 1);
+  // wait
+  delay(timer);
+  // turn pin 5 off
+  digitalWrite(5,0);
+  //turn pin 3 on
+  digitalWrite(3, 1);
+  // wait
+  delay(timer);
+  // turn pin 3 off
+  digitalWrite(3, 0);
+//turn pin 4 on
+  digitalWrite(4, 1);
+  // wait
+  delay(timer);
+  //turn pin 4 off
+  digitalWrite(4, 0);
+//turn pin 2 on
+  digitalWrite(2, 1);
+  // wait
+  delay(timer);
+  //turn pin 2 off
+  digitalWrite(2, 0);
+  
+}
+
+    </code></pre>
+  </div>
+
+  <div class="header">
+    <img src="trim.D11EA25B-FC89-4B0B-B593-71FF39E923D1.gif" />
+    <p>
+      Here is a gif of my functioning light display!
+    </p>
+  </div>
+
+  <div class="header">
+    <img src="IMG_982A90DE92A0-1.jpeg" />
+    <p>
+        1. the image next to this displays my voltage time graph showing the voltage up to 2 seconds. i figured this got the point acrossed and i thouhgt it would be a wast of time to go beyond that. 2. you could blink as many LED's independantly as your ardunio has ports so 19 if I counted correctly and the current draw would be dependant on the LED and resistor you use so there is no one answer for that but since each pin is firing one at a time and we can to some extent contol the amount of current with the resistor and led then we can try and keep it at 20 mA of current. 3. I could no longer tell that my led was blinking at 0.01 second intervals between blinks. 4. I did not use AI for the completion of this assignment.
+      
+      </p>
+  </div>
+
   </body>
 </html>
