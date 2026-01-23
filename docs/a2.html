@@ -4,15 +4,121 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Tucker Swarens HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
+    <h1>Assignment 2: Fade!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+      <img src="IMG_2962.png" />
+      <p>The image left is my circut with my 3 leds, one of which fades. All with thier own resistors and then a 10kohm pull down resistor and button. </p>
     </div>
+      <div class="header">
+    <img src="Pin 9 Pin 10.jpeg" />
+    <p>
+      Here is the image of my schematic. I included the calculations for my resistors under the image but i useed a 220 ohm resistor for everything except the button to stay below the maximun safe current of 20 mA.
+    </p>
+  </div>
+  <div class="code-snippet">
+    <p>
+      Here is my code snippet for the blinking lED's:
+    </p>
+    <pre><code>
+    //define the button to pin 2
+const int buttonPin = 2;
+//constant ints don't change. I'm adding in which led corresponds to each pin
+//fadeing led goes with pin 9
+const int LEDFade = 9;
+//led 2 goes with pin 10
+const int LED2 = 10;
+//led 3 goes with pin 11
+const int LED3 = 11;
+
+//stores the value of the state of the button either on or off
+int buttonState = 0;
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize all the pins with leds as outputs
+  //pin 9 is an output 
+  pinMode(LEDFade, OUTPUT);
+  //pin 10 is an output 
+  pinMode(LED2, OUTPUT);
+  //pin 11 is and output 
+  pinMode(LED3, OUTPUT),
+
+//initialize the button pin as an input
+  pinMode(buttonPin, INPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  //reads the current state of the button
+  buttonState = digitalRead(buttonPin);
+//checks if button is pressed and if it is runs the code inside the if statment
+  if (buttonState == HIGH) {
+    //turn on led 2 which is red
+    digitalWrite(LED2, HIGH);
+    
+    //fade led 1 up using a for loop increasing brightness from 0
+    for (int brightness = 0; brightness <= 255; brightness +=5) {
+      //turn led on pin 9 to the brightness value from the for loop
+      analogWrite(LEDFade, brightness);
+      //delay 0.02 seconds
+      delay(20);
+    }
+    
+    // fade led 1 down using a for loop deacreasing the brightness from 255 in incriments of 5
+    for (int brightness = 255; brightness >= 0; brightness -= 5) {
+      //turn led on pin 9 to the brightness value from the for loop
+      analogWrite(LEDFade, brightness);
+      //delay 0.02 seconds
+      delay(20);
+    }
+    
+    //turn led 3 on then off then on then off again with 0.1 second delays
+    //turn led 3 on
+    digitalWrite(LED3, HIGH);
+    //delay 0.1 seconds
+    delay(100);
+    //turn led 3 off
+    digitalWrite(LED3, LOW);
+    //delay 0.1 seconds
+    delay(100);
+    //turn led 3 on
+    digitalWrite(LED3, HIGH);
+    //delay 0.1 seconds
+    delay(100);
+    //turn led 3 off
+    digitalWrite(LED3, LOW);
+
+    //turn all the leds off if the button is not pressed 
+  } else {
+    //turn led 2 off
+    digitalWrite(LED2, LOW);
+    //turn led 3 off
+    digitalWrite(LED3, LOW);
+    //turn ledfade off
+    analogWrite(LEDFade, 0);
+  }
+
+}
+
+
+    </code></pre>
+  </div>
+  <div class="header">
+    <img src="trim.FDB1B4CB-5D08-4CF4-B331-2086CB81DCCF.gif" />
+    <p>
+      Here is a gif of my fading light toy!
+    </p>
+  </div>
+  <div class="header">
+    <img src="analogwrite (Led 64).jpeg" />
+    <p>
+      1. My work for question 1 is in the image to the left 2. if each led was on at roughly 20mA times the 3 leds then i would have a total of 60mA whaich is below the total safe value of 200mA. if all three of these leds were running off of a 1200mAh battery then we would take and devide 1200mAh by 60 mA hetting us a value of 20 hours of run time. 3. when measuring the voltage of my red led I got exactly 2.0 volts which just so happens to match exactly with my thioretical value of 2 volts.
+    </p>
+  </div>
   </body>
 </html>
