@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Tucker Swarens HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Assignment 3: Input Output!</h1>
+    <div class="header">
+      <img src="IMG_3011.png" />
+      <p>The image left is my light sensor curcit it has 1 light sensor, 2 normal leds and 1 pwm fading led. the light sensor senses light in a room and then depending on mow much or little light it fades the pwm led brighter for low light and dimmer for high light. the other two leds are low and medium light sensitivity signals. when there is low light the left red led lights up when the light is in the middle then the middle red led lights up and if the light is supper bright neither of them will be on.   </p>
+    </div>
+      <div class="header">
+    <img src="New Note.jpeg" />
+    <p>
+      Here is the image of my schematic. I included the calculations for my resistors under the image but i used a 220 ohm resistor for everything except the light sensor to stay below the maximun safe current of 20 mA. the light sensor used a 10k ohm resistor to pick up the full voltage range.
+    </p>
+  </div>
+  <div class="code-snippet">
+    <p>
+      Here is my code snippet for the light sensor:
+    </p>
+    <pre><code>
+    //select the input pin that will read the voltage changes from light sensor
+int sensorPin = A0;
+//define pin 4 as the ledLow 
+int ledLow = 4;  
+//define pin 5 as ledMid  
+int ledMid = 5; 
+//define pin 9 as the ledFade pin 
+int ledFade = 9;
+// variable to store the value of the sensor starting at 0
+int sensorValue = 0;
+//variable to store mapped pwm value
+int pwmValue = 0;
+
+//this is where the set up elements go like what each pin will do and the names they will be called too
+void setup() {
+  //seting up ledlow pin as an output
+  pinMode(ledLow, OUTPUT);
+  //setting up ledmid pin as an output
+  pinMode(ledMid, OUTPUT);
+  //setting up ledfade pin as an output
+  pinMode(ledFade, OUTPUT);
+//start serial communication for debugging and visualization
+  Serial.begin(9600);
+
+}
+//required ellement to run the arduino but this is what the aruduino acutually runs through excluding the set up ellements.
+void loop() {
+//read the value that the light sensor is giving the output will be between 0 and 1023
+  sensorValue = analogRead(sensorPin);
+//map converts the 10 bit values (0-2023) the arudiuno got from the anolog read to the 8 bit values that the led accepts from analog write (0-225) and then i reversed them in the ordering of the map function so that high light would give low values and low light would give high values 
+  pwmValue = map(sensorValue,0,1023,255,0);
+//constrain comant constrains pwm values between 0 and 255 it will not let the values go beyound those values
+  pwmValue = constrain(pwmValue, 0, 225);
+//the ledfade gets set to the pwm value so that the led fades acourdingly
+  analogWrite(ledFade, pwmValue);
+//if the sensor value is less than 300 then we enter the if statment if its not then we go to the else statment.
+  if (sensorValue < 300) {
+    //lowLed will turn on
+    digitalWrite(ledLow, HIGH);
+    //else statment entured if sensor is grerater than 300
+  } else {
+    //ledlow is turned off
+    digitalWrite(ledLow, LOW);
+  }
+//if sensor value is greater than or equal to 300 and less than 700 we enter if statment
+  if (sensorValue >= 300 && sensorValue < 700) {
+    //if we enter the if statment then we turn ledmid on 
+    digitalWrite(ledMid, HIGH);
+    //else statment if we are outside of the if statment 
+  } else {
+    //if we enter the else statment then turn led mid off
+    digitalWrite(ledMid, LOW);
+  }
+//debugging serial printing 
+  Serial.print("light sensor value: ");
+  //prints sensor value so i can reaed to debug and visualize 
+  Serial.print(sensorValue);
+//serial debugging and priinting 
+  Serial.print(" | LED brightness: ");
+  //prints pwm value so i can visualize 
+  Serial.println(pwmValue);
+//delay so that there are no strange caracteristics from running through the code again. 
+  delay(100);
+
+}
+
+
+    </code></pre>
+  </div>
+  <div class="header">
+    <img src="trim.7CB1C0FB-57CD-4B1C-8319-5A8BD0A722C2.gif" />
+    <p>
+      Here is a gif of my fading light toy!
+    </p>
+  </div>
+  <div class="header">
+    <img src="New Note 2.jpeg" />
+    <p>
+      1. in the voltage devider the variable resistor can be either R1 or R2 but if the variable resistor is in r1 like I have it with a light resistor. then more light gives a high voltage while low light would give low voltage. if the variable reistor was on the bottom then you would have to flip the code as high light would read as low voltage and and low light would give high voltage. the equation for voltage out to the pin with the variable resistor in r1 is Vout = Vin (R2/(R2 + R1)) if the variable resistor is in the R2 postion then the equation will be Vout = Vin (R2 (R1 +R2)) the result is oposite outputs depending on the positioning of the variable resistor. 2. question 2 I have drawn to the left. I graphed it as if we started at t=0 with the light sensor in a very bright room then the light gradually decreases until there is no light at t=7 then starts gradually increasing again. 3. for question 3 the if anolog write and read were 10 and 16 bits instead of 8 and 10 then there would be much finer sensor resorlution less visible stepping and smoother brightness changes. the code would look like map(sensorValue, 0, 65535, 0, 1023); mapping the new larger ranges to eachother since at 16 bit you would have 0-65535 diffrent position and at 10 bit you have 0 to 1023. the code shows an 16 bit input to a 10 bit output.
+    </p>
+  </div>
+  </body>
+</html>
