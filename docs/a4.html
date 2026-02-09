@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Tucker Swarens HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Assignment 4: Libraries!</h1>
+    <div class="header">
+      <img src="IMG_3041.jpeg" />
+      <p>The image left is my light actuated survo with sensitivity adjustment. I used a light sensor which maps to the degrees of a survo and moves based on the amount of light in a room. Then I added a potentiometer which i can use to adjust the sesitivity of the light sensor inputs to the servo. 
+           </p>
+    </div>
+      <div class="header">
+    <img src="New Note 3.jpeg" />
+    <p>
+      Here is the image of my schematic. The light sensor used a 10k ohm resistor to pick up the full voltage range.
+    </p>
+  </div>
+  <div class="code-snippet">
+    <p>
+      Here is my code snippet for the light sensor:
+    </p>
+    <pre><code>
+    //including the servo library 
+#include Servo.h
+//defines anolog pin A0 as the input for the photoresistor
+const int ldrPin = A0;
+//defines pin 9 as the control signal pin for the servo
+const int servoPin = 9;
+//defines anolog pin A1 as the input sensor for the potentiaometer
+const int potPin = A1;
+//creates a servo object that we can send angle commands too
+Servo myServo;
+//stores the min light sensor value detected durring calibration 
+int minLight = 1023; 
+//stores the max light sensor value detected durring calibration
+int maxLight = 0; 
+//stores the final angle that will be sent to the servo
+int servoAngle = 0;
+//sets up any comands to be called later in the loop
+void setup() {
+  //connects the servo object to pin 9
+  myServo.attach(servoPin);
+  //starts serial comunication
+  Serial.begin(9600);
+//stores the current time in milliseconds to limit calibration durration
+  unsigned long startTime = millis();
+  //runs the calibration loop for 3 seconds
+  while (millis() - startTime < 3000) {
+    //reads the light level from the pin
+    int reading = analogRead(ldrPin);
+    //updates the min light value if a lower reading is detected
+    if (reading < minLight) minLight = reading;
+    //updates the the max light value if a higher value is detected
+    if (reading > maxLight) maxLight = reading;
+  }
+}
+//loops through code until arduino looses power
+void loop() {
+  //reads the current light level 
+  int lightValue = analogRead(ldrPin);
+  //reads the current position of the potentiometer
+  int potValue = analogRead(potPin);
+  //maps the calibrated light sensor range to the servo angles dark is 180 and bright is 0
+  int baseAngle = map(lightValue, minLight, maxLight, 180, 0);
+  //ensures the calculated angle stays within valid servo limits
+  baseAngle = constrain(baseAngle, 0, 180);
+  //maps the potentiometer range to a maximum allowed servo angle 30 degrees helps to prevent small jittery movemnts while 180 provides full range of motion
+  int maxAngle = map(potValue, 0, 1023, 30, 180);
+  //scales the servo movment based on the potentiometer setting allowing user to controll sensitivity and range of motion
+  servoAngle = map(baseAngle, 0, 180, 0, maxAngle);
+  //sends the final angle command to the servo
+  myServo.write(servoAngle);
+  //prints the word light in serial
+  Serial.print("Light: ");
+  //prints light value in serial
+  Serial.print(lightValue); 
+  //prints word potential
+  Serial.print(" Potential: ");
+  //prints pot value in serial
+  Serial.print(potValue);
+  //prints word servo angle 
+  Serial.print(" Servo andgle: ");
+  //prints the servo angle
+  Serial.println(servoAngle);
+  //short delay to reduce jitter and stableize readings
+  delay(50);
+}
+    </code></pre>
+  </div>
+  <div class="header">
+    <img src="trim.F10E1F1A-1839-42F7-B8F6-0A3C9797EE19.gif" />
+    <p>
+      Here is a gif of my light acuated servo!
+    </p>
+  </div>
+  <div class="header">
+    <img src="IMG_5F5777F7EDB1-1.jpeg" />
+    <p>
+      1. for question 1 look at the immage left showing my graph depicting the repeating square wave with an increasing duty cycle. 2. if an input device gives an incorrest reading 1 percent of the time we can reject sudden outliers like this: if(abs(currentreading - previousreading) < threshold) { validreading = currentreading; } else {validreading = previousreading ;} this should ignore sudden spikes. 3. if we have noisy input we can smooth it out by weighting previous values more heavily that new fluctuations like this: smoothedvalue = (smoothedvalue * 0.9) + (newreading * 0.1); this weights the older values more heavily so that new noisy data does not impact the values as much.
+    </p>
+  </div>
+  </body>
+</html>
